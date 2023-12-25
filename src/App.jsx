@@ -6,8 +6,8 @@ import Home from './components/Home';
 import MoviesPage from './components/MoviesPage';
 import Nav from './components/Nav';
 import Welcome from './components/Welcome';
-import SeriesPage from './SeriesPage';
-import GenrePage from './GenrePage';
+import SeriesPage from './components/SeriesPage';
+import GenrePage from './components/GenrePage';
 
 function App() {
   /* const apiKey = 'd9aa109c31f76cdca097ed5121699292';
