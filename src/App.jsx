@@ -28,11 +28,11 @@ function App() {
       <Router>
         <Nav />
         <Switch>
-          <Route path="/" exact component={Welcome} />
-          <Route path="/home" component={Home} />
-          <Route path="/movies" component={MoviesPage} />
-          <Route path="/series" component={SeriesPage} />
-          <Route path="/genre" component={GenrePage} />
+          <Route path="Movie-Website/" exact component={Welcome} />
+          <Route path="Movie-Website/home" component={Home} />
+          <Route path="Movie-Website/movies" component={MoviesPage} />
+          <Route path="Movie-Website/series" component={SeriesPage} />
+          <Route path="Movie-Website/genre" component={GenrePage} />
         </Switch>
         <Footer />
       </Router>
