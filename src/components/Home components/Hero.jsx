@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 const Hero = () => {
   const [movies, setMovies] = useState([]);
   const sliderRef = useRef(null);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -93,8 +94,16 @@ const Hero = () => {
     autoplaySpeed: 3000,
   };
 
+  const handleWatchNowClick = (movie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handleCloseOverlay = () => {
+    setSelectedMovie(null);
+  };
+
   return (
-    <div ref={sliderRef} className="relative h-screen overflow-hidden z-10">
+    <div ref={sliderRef} className="relative h-screen overflow-hidden">
       <Slider {...settings} className="h-full bg-gradient-to-r from-black via-transparent to-transparent">
         {movies.map((movie) => (
           <div key={movie.id} className="movie-slide w-full h-full relative">
@@ -127,7 +136,7 @@ const Hero = () => {
                 <h1 className="text-7xl font-bold mb-4">{movie.title}</h1>
                 <p className="text-sm font-light leading-6">{movie.overview}</p>
                 <div className="button-container">
-                  <button className="mt-4 w-fit bg-red text-white px-6 py-3">
+                  <button onClick={() => handleWatchNowClick(movie)} className="mt-4 w-fit bg-red text-white px-6 py-3">
                     <i className="fa-solid fa-play mr-3"></i> Watch Now
                   </button>
                 </div>
@@ -136,6 +145,19 @@ const Hero = () => {
           </div>
         ))}
       </Slider>
+
+      {selectedMovie && (
+        <div className="overlay">
+          <div className="overlay-content">
+            <button onClick={handleCloseOverlay} className="close-button">
+              Close
+            </button>
+            <h2 className="text-2xl font-bold mb-2">{selectedMovie.title}</h2>
+            <p className="text-grey">{selectedMovie.release_date}</p>
+            {/* Add more movie details here */}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -4,11 +4,26 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'tailwindcss/tailwind.css';
 
+const MovieOverlay = ({ movie, onClose }) => {
+  return (
+    <div className="overlay">
+      <div className="overlay-content">
+        <button onClick={onClose} className="close-button">
+          Close
+        </button>
+        <h2 className="text-2xl font-bold mb-2">{movie.title}</h2>
+        <p className="text-grey">{movie.release_date}</p>
+        {/* Add more movie details here */}
+      </div>
+    </div>
+  );
+};
+
 const TrendingMovies = () => {
   const [movies, setMovies] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
-
     const fetchMovies = () => {
       const apiKey = 'd9aa109c31f76cdca097ed5121699292';
       const apiUrl = 'https://api.themoviedb.org/3';
@@ -25,7 +40,6 @@ const TrendingMovies = () => {
     };
 
     fetchMovies();
-
   }, []);
 
   const settings = {
@@ -60,13 +74,25 @@ const TrendingMovies = () => {
     ],
   };
 
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handleCloseOverlay = () => {
+    setSelectedMovie(null);
+  };
+
   return (
     <div className='mt-16 px-10 bg-black text-white'>
       <h1 className="text-3xl font-bold mb-6 ml-6">Trending Movies</h1>
       <div className="container mx-auto lg:px-24 xl:px-32 outline-none">
         <Slider {...settings}>
           {movies.map((movie) => (
-            <div key={movie.id} className="px-2 cursor-pointer">
+            <div
+              key={movie.id}
+              className="px-2 cursor-pointer"
+              onClick={() => handleMovieClick(movie)}
+            >
               <img
                 src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                 alt={movie.title}
@@ -83,6 +109,10 @@ const TrendingMovies = () => {
           ))}
         </Slider>
       </div>
+
+      {selectedMovie && (
+        <MovieOverlay movie={selectedMovie} onClose={handleCloseOverlay} />
+      )}
     </div>
   );
 };

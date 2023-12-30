@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import 'tailwindcss/tailwind.css';
 
 const Series = ({ name, poster_path, first_air_date }) => {
   const imageUrl = `https://image.tmdb.org/t/p/w500/${poster_path}`;
@@ -12,10 +13,26 @@ const Series = ({ name, poster_path, first_air_date }) => {
   );
 };
 
+const SeriesDetailOverlay = ({ series, onClose }) => {
+  return (
+    <div className="overlay">
+      <div className="overlay-content">
+        <button onClick={onClose} className="close-button">
+          Close
+        </button>
+        <h2 className="text-2xl font-bold mb-2">{series.name}</h2>
+        <p className="text-grey">{series.first_air_date}</p>
+        {/* Add more series details here */}
+      </div>
+    </div>
+  );
+};
+
 const SeriesPage = () => {
   const [series, setSeries] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
+  const [selectedSeries, setSelectedSeries] = useState(null);
 
   useEffect(() => {
     const fetchSeries = () => {
@@ -23,11 +40,11 @@ const SeriesPage = () => {
       const apiUrl = 'https://api.themoviedb.org/3/';
       const pageQueryParam = `&page=${page}`;
 
-      let endpoint = 'search/tv'; // Use TV series endpoint
+      let endpoint = 'search/tv';
       let query = `query=${searchQuery}`;
 
       if (!searchQuery) {
-        endpoint = 'tv/popular'; // Fetch popular TV series if no search query
+        endpoint = 'tv/popular';
         query = '';
       }
 
@@ -54,6 +71,14 @@ const SeriesPage = () => {
     setPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
+  const handleSeriesClick = (selectedSeries) => {
+    setSelectedSeries(selectedSeries);
+  };
+
+  const handleCloseOverlay = () => {
+    setSelectedSeries(null);
+  };
+
   return (
     <div className="container mx-auto p-4 series-grid flex items-center justify-center flex-col w-full mt-20">
       <h1 className='font-bold text-6xl mb-5'>TV Series</h1>
@@ -67,30 +92,24 @@ const SeriesPage = () => {
         />
         <i className="fas fa-search text-white cursor-pointer ml-4"></i>
       </div>
-      {searchQuery && (
-        <div className="series-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-          {series.map((serie) => (
-            <Series key={serie.id} {...serie} />
-          ))}
-        </div>
+      <div className="series-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+        {series.map((serie) => (
+          <div key={serie.id} className="cursor-pointer" onClick={() => handleSeriesClick(serie)}>
+            <Series {...serie} />
+          </div>
+        ))}
+      </div>
+      {selectedSeries && (
+        <SeriesDetailOverlay series={selectedSeries} onClose={handleCloseOverlay} />
       )}
-      {!searchQuery && (
-        <div className="series-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-          {series.map((serie) => (
-            <Series key={serie.id} {...serie} />
-          ))}
-        </div>
-      )}
-      {searchQuery && (
-        <div className="w-full mt-4 flex justify-between">
-          <button onClick={handlePrevClick} disabled={page === 1}>
-            <i className="fas fa-chevron-left cursor-pointer"></i> Prev
-          </button>
-          <button onClick={handleNextClick} disabled={page === totalPages}>
-            Next <i className="fas fa-chevron-right cursor-pointer"></i>
-          </button>
-        </div>
-      )}
+      <div className="w-full mt-4 flex justify-between">
+        <button onClick={handlePrevClick} disabled={page === 1}>
+          <i className="fas fa-chevron-left cursor-pointer"></i> Prev
+        </button>
+        <button onClick={handleNextClick} disabled={page === totalPages}>
+          Next <i className="fas fa-chevron-right cursor-pointer"></i>
+        </button>
+      </div>
     </div>
   );
 };

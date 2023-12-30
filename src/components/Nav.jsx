@@ -41,7 +41,7 @@ const Nav = () => {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-30 py-3 px-4 lg:px-8 xl:px-16 2xl:px-32 flex items-center justify-between ${isScrolled ? 'bg-white text-black drop-shadow-md' : 'bg-black text-white'}`}>
-      <NavLink to="/home" activeClassName="text-white">
+      <NavLink to="/Movie-Website/home">
         <h1 className="text-xl lg:text-2xl font-bold">
           <span className='text-red text-2xl lg:text-3xl'>A </span>flix
         </h1>
@@ -68,7 +68,7 @@ const Nav = () => {
       <ul className={`flex items-center justify-between gap-4 lg:gap-8 mr-5 ${isMobileMenuOpen ? 'flex-col items-start' : 'hidden lg:flex'}`}>
         <li>
           <NavLink
-            to="/home"
+            to="/Movie-Website/home"
             onClick={() => handleLinkClick('/home')}
             className={`text-sm lg:text-base ${activeLink === '/home' ? 'text-red' : isScrolled ? 'text-black' : ''}`}
           >
@@ -77,7 +77,7 @@ const Nav = () => {
         </li>
         <li>
           <NavLink
-            to="/movies"
+            to="/Movie-Website/movies"
             onClick={() => handleLinkClick('/movies')}
             className={`text-sm lg:text-base ${activeLink === '/movies' ? 'text-red' : isScrolled ? 'text-black' : ''}`}
           >
@@ -86,7 +86,7 @@ const Nav = () => {
         </li>
         <li>
           <NavLink
-            to="/series"
+            to="/Movie-Website/series"
             onClick={() => handleLinkClick('/series')}
             className={`text-sm lg:text-base ${activeLink === '/series' ? 'text-red' : isScrolled ? 'text-black' : ''}`}
           >
@@ -95,7 +95,7 @@ const Nav = () => {
         </li>
         <li>
           <NavLink
-            to="/genre"
+            to="/Movie-Website/genre"
             onClick={() => handleLinkClick('/genre')}
             className={`text-sm lg:text-base ${activeLink === '/genre' ? 'text-red' : isScrolled ? 'text-black' : ''}`}
           >

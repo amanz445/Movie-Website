@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import 'tailwindcss/tailwind.css';
 
 const Movie = ({ title, poster_path, release_date }) => {
   const imageUrl = `https://image.tmdb.org/t/p/w500/${poster_path}`;
@@ -12,10 +13,26 @@ const Movie = ({ title, poster_path, release_date }) => {
   );
 };
 
+const MovieDetailOverlay = ({ movie, onClose }) => {
+  return (
+    <div className="overlay">
+      <div className="overlay-content">
+        <button onClick={onClose} className="close-button">
+          Close
+        </button>
+        <h2 className="text-2xl font-bold mb-2">{movie.title}</h2>
+        <p className="text-grey">{movie.release_date}</p>
+        {/* Add more movie details here */}
+      </div>
+    </div>
+  );
+};
+
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1); // Track the current page
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
     const fetchMovies = () => {
@@ -55,6 +72,14 @@ const MoviesPage = () => {
     setPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
+  const handleMovieClick = (movie) => {
+    setSelectedMovie(movie);
+  };
+
+  const handleCloseOverlay = () => {
+    setSelectedMovie(null);
+  };
+
   return (
     <div className="container mx-auto p-4 movie-grid flex items-center justify-center flex-col w-full mt-20">
       <h1 className='font-bold text-6xl mb-5'>Movies</h1>
@@ -68,30 +93,24 @@ const MoviesPage = () => {
         />
         <i className="fas fa-search text-white cursor-pointer ml-4"></i>
       </div>
-      {searchQuery && (
-        <div className="movie-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-          {movies.map((movie) => (
-            <Movie key={movie.id} {...movie} />
-          ))}
-        </div>
+      <div className="movie-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+        {movies.map((movie) => (
+          <div key={movie.id} className="cursor-pointer" onClick={() => handleMovieClick(movie)}>
+            <Movie {...movie} />
+          </div>
+        ))}
+      </div>
+      {selectedMovie && (
+        <MovieDetailOverlay movie={selectedMovie} onClose={handleCloseOverlay} />
       )}
-      {!searchQuery && (
-        <div className="movie-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-          {movies.map((movie) => (
-            <Movie key={movie.id} {...movie} />
-          ))}
-        </div>
-      )}
-      {searchQuery && (
-        <div className="w-full mt-4 flex justify-between">
-          <button onClick={handlePrevClick} disabled={page === 1}>
-            <i className="fas fa-chevron-left cursor-pointer"></i> Prev
-          </button>
-          <button onClick={handleNextClick} disabled={page === totalPages}>
-            Next <i className="fas fa-chevron-right cursor-pointer"></i>
-          </button>
-        </div>
-      )}
+      <div className="w-full mt-4 flex justify-between">
+        <button onClick={handlePrevClick} disabled={page === 1}>
+          <i className="fas fa-chevron-left cursor-pointer"></i> Prev
+        </button>
+        <button onClick={handleNextClick} disabled={page === totalPages}>
+          Next <i className="fas fa-chevron-right cursor-pointer"></i>
+        </button>
+      </div>
     </div>
   );
 };
